@@ -1,0 +1,19 @@
+.wrapper{
+  width: 500px;
+  height: 700px;
+  border: 1px solid;
+  background-color: black;
+  border-radius: 10px;
+  margin-top: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-device-width: 600px) {
+  .wrapper{
+    width: 95vw;
+    height: 100vh;
+    margin-top: 0;
+  }
+}
