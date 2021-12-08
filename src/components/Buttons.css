@@ -9,6 +9,7 @@ button{
   background-color: rgb(88, 85, 85);
   color: white;
   box-shadow: 2px 2px black, -2px 2px black, 2px -2px black, -2px -2px black;
+  cursor: pointer;
 }
 .plusSign{
   grid-row: 4/6;
