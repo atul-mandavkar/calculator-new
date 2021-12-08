@@ -11,6 +11,10 @@ button{
   box-shadow: 2px 2px black, -2px 2px black, 2px -2px black, -2px -2px black;
   cursor: pointer;
 }
+.deleteSign{
+  color: red;
+  font-size: 150%;
+}
 .plusSign{
   grid-row: 4/6;
   grid-column: 4/5;
