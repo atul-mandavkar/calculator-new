@@ -21,7 +21,8 @@ function App() {
     num: 0,
     res: 0,
     upRes: "",
-    sign: ""
+    sign: "",
+    checkNum: true
   });
   const localString = (x) => {
     if(x.length > 1 && x[0] === "0" && x[1] !== "."){
@@ -30,7 +31,19 @@ function App() {
     return x;
   }
   const removeSpaces = (x) => {
+    console.log(x);
     return String(x).replace(/\s/g, "");
+  }
+  const correctSign = (x) => {
+  if(String(x).match(/[X]/g)){
+    console.log("replaced");
+    return String(x).replace("X", "*");
+  }
+    return x;
+  }
+  const changeLastSign = (x, y) => {
+    const z = String(x).substring(0, x.length-1);
+    return String(z + y);
   }
 
   const numClickHandler = (e) => {
@@ -49,11 +62,30 @@ function App() {
       });
     }
     else{
-      prompt("Only 16 digits number avaialble", "try again");
+      alert("Only 16 digits number avaialble", "try again");
     }
   };
-  const signClickHandler = () => {
+  const signClickHandler = (e) => {
     console.log("sign");
+    const value = (e.target.innerHTML);
+    //console.log(value);
+    console.log(correctSign(value));
+    //console.log(Number(calc.upRes[calc.upRes.length - 1]));
+    if(calc.upRes.match(/[+|-|/]|[X]/g)){
+      const s2 = calc.upRes.match(/[+]|[-]|[/]|[X]/g);
+      const s1 = s2[calc.upRes.match(/[+]|[-]|[/]|[X]/g).length - 1];
+      console.log(calc.upRes.lastIndexOf(s1));
+    }
+
+    setCalc({
+      ...calc,
+      num: 0,
+      sign: value,
+      upRes:
+        Number(calc.upRes[calc.upRes.length - 1])
+        ? calc.upRes + value
+        : changeLastSign(calc.upRes, value)
+    });
   };
   const invertClickHandler = () => {
     console.log("invert");
@@ -66,8 +98,10 @@ function App() {
       });
     }
   };
-  const equalClickHandler = () => {
+  const equalClickHandler = (e) => {
     console.log("equal");
+    const value = e.target.innerHTML;
+    console.log(value);
   };
   const dotClickHandler = (e) => {
     console.log("dot");
@@ -78,7 +112,9 @@ function App() {
       setCalc({
         ...calc,
         num:
-          !calc.num.match(/[.]/)
+          calc.num === 0
+          ? "0" + value
+          :!calc.num.match(/[.]/)
           ? localString(removeSpaces(calc.num + value))
           : calc.num,
         upRes:
@@ -101,11 +137,14 @@ function App() {
   const deleteClickHandler = () => {
     console.log("delete");
 
-    setCalc({
-      ...calc,
-      num: removeSpaces(calc.num).substring(0, removeSpaces(calc.num).length-1),
-      upRes: removeSpaces(calc.upRes).substring(0, removeSpaces(calc.upRes).length-1)
-    });
+    if(calc.upRes.length > 0){
+      setCalc({
+        ...calc,
+        num: removeSpaces(calc.num).substring(0, removeSpaces(calc.num).length-1),
+        upRes: removeSpaces(calc.upRes).substring(0, removeSpaces(calc.upRes).length-1),
+        sign: ""
+      });
+    }
   };
 
   return (
@@ -113,7 +152,7 @@ function App() {
       <Wrapper2>
         <DisplayScreen>
           <Screen2 value={calc.upRes}/>
-          <Screen1 value={calc.num ? calc.num : calc.res} />
+          <Screen1 value={calc.num ? calc.num : calc.sign ? calc.sign: calc.res} />
         </DisplayScreen>
         <ButtonBox>
           {buttonName.flat().map((btn, i)=>{
