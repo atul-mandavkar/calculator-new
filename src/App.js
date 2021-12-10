@@ -26,24 +26,44 @@ function App() {
   });
   const localString = (x) => {
     if(x.length > 1 && x[0] === "0" && x[1] !== "."){
+      console.log("local1")
       return x.slice(1, x.length);
     }
+    console.log("local2")
+    console.log(x)
     return x;
-  }
+  };
   const removeSpaces = (x) => {
-    console.log(x);
+    console.log("removeSpace");
     return String(x).replace(/\s/g, "");
-  }
+  };
   const correctSign = (x) => {
-  if(String(x).match(/[X]/g)){
-    console.log("replaced");
-    return String(x).replace("X", "*");
-  }
+    if(String(x).match(/[X]/g)){
+      console.log("correctSign1");
+      return String(x).replace("X", "*");
+    }
+    console.log("correctSign2")
     return x;
-  }
+  };
   const changeLastSign = (x, y) => {
     const z = String(x).substring(0, x.length-1);
+    console.log("changeLastSign")
     return String(z + y);
+  };
+  const correctDecimal = (x) => {
+    if(x[x.length-1] === "."){
+      console.log("correctDecimal1")
+      return x + "0";
+    }
+    console.log("correctDecimal2")
+    return x;
+  };
+  const InvertChange = (x, y) => {
+    let ind = String(x).lastIndexOf(y);
+    let sub = String(x).substring(ind, String(x).length);
+    let sub2 = "-" + sub;
+    console.log(InvertChange);
+    return String(x).replace(sub, sub2);
   }
 
   const numClickHandler = (e) => {
@@ -58,7 +78,7 @@ function App() {
           calc.num === 0 && value === "0"
           ? "0"
           : localString(removeSpaces(calc.num + value)),
-        upRes: localString(removeSpaces(calc.upRes + value))
+        upRes: calc.upRes + value
       });
     }
     else{
@@ -70,12 +90,8 @@ function App() {
     const value = (e.target.innerHTML);
     //console.log(value);
     console.log(correctSign(value));
-    //console.log(Number(calc.upRes[calc.upRes.length - 1]));
-    if(calc.upRes.match(/[+|-|/]|[X]/g)){
-      const s2 = calc.upRes.match(/[+]|[-]|[/]|[X]/g);
-      const s1 = s2[calc.upRes.match(/[+]|[-]|[/]|[X]/g).length - 1];
-      console.log(calc.upRes.lastIndexOf(s1));
-    }
+    console.log(calc.upRes)
+    console.log("<<< "+calc.num+" ]]]")
 
     setCalc({
       ...calc,
@@ -83,6 +99,10 @@ function App() {
       sign: value,
       upRes:
         Number(calc.upRes[calc.upRes.length - 1])
+        ? calc.upRes + value
+        : calc.upRes[calc.upRes.length-1] === "0" && calc.upRes[calc.upRes.length-2] === "."
+        ? correctDecimal(calc.upRes) + value
+        : calc.upRes[calc.upRes.length-1] === "0"
         ? calc.upRes + value
         : changeLastSign(calc.upRes, value)
     });
@@ -94,7 +114,7 @@ function App() {
       setCalc({
         ...calc,
         num: -(calc.num),
-        upRes: -(calc.upRes)
+        upRes: InvertChange(calc.upRes, calc.num)
       });
     }
   };
@@ -102,24 +122,25 @@ function App() {
     console.log("equal");
     const value = e.target.innerHTML;
     console.log(value);
+    console.log(calc.upRes)
   };
   const dotClickHandler = (e) => {
     console.log("dot");
     const value = e.target.innerHTML;
     console.log(value);
 
-    if(removeSpaces(calc.num).length < 16){
+    if(removeSpaces(calc.num).length < 16 && !String(calc.num).match(/[.]/)){
       setCalc({
         ...calc,
         num:
           calc.num === 0
           ? "0" + value
-          :!calc.num.match(/[.]/)
-          ? localString(removeSpaces(calc.num + value))
-          : calc.num,
+          : calc.num + value,
         upRes:
-          !calc.upRes.match(/[.]/)
+          calc.num !== 0
           ? calc.upRes + value
+          : calc.num === 0
+          ? calc.upRes + "0" + value
           : calc.upRes
       });
     }
