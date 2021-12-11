@@ -59,17 +59,17 @@ function App() {
     return x;
   };
   const InvertChange = (x, y) => {
-    console.log(x + " string ");
-    console.log("find " + y);
+    //console.log(x + " string ");
+    //console.log("find " + y);
     let ind = String(x).lastIndexOf(y); 
-    console.log(String(x).length)
-    console.log("y "+ ind)
+    //console.log(String(x).length)
+    //console.log("y "+ ind)
     let sub = String(x).substring(ind, String(x).length);
-    console.log("sub "+ sub)
+    //console.log("sub "+ sub)
     let sub1 = String(x).substring(0, ind);
-    console.log(sub1)
+    //console.log(sub1)
     let sub2 = -Number(sub);
-    console.log(sub2);
+    //console.log(sub2);
     console.log(InvertChange);
     
     return (sub1 + sub2);
@@ -140,7 +140,38 @@ function App() {
     console.log("equal");
     const value = e.target.innerHTML;
     console.log(value);
-    console.log(calc.upRes)
+    //console.log(calc.upRes)
+    console.log();
+    // For "--" conversion into "+" sign
+    const invertNum = (x) => {
+      if(x.match(/[-]{2}/)){
+        console.log("minus minus")
+        let ans = x.replace("--", "+");
+        if(!ans.match(/[-]{2}/)){
+          console.log(ans);
+          return ans;
+        }
+        else{
+          invertNum(ans);
+        }
+      }
+      console.log(x);
+      return x;
+    }
+    let step1 = invertNum(calc.upRes);
+    console.log(step1)
+    // first find index of * or / then operate them then replace their position by answer till there is no *  or /  then check for + Or - sign
+/*
+    // For "*" or "/" sign
+    const multOrDiv = (x) => {
+      if(x.match(/[X]|[/]/g)){
+        console.log("mult or div");
+        let arr1 = x.match(/[X]|[/]/g);
+        console.log(arr1.length)
+      }
+    }
+    multOrDiv(step1);*/
+
   };
   const dotClickHandler = (e) => {
     console.log("dot");
