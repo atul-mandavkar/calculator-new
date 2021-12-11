@@ -59,11 +59,20 @@ function App() {
     return x;
   };
   const InvertChange = (x, y) => {
-    let ind = String(x).lastIndexOf(y);
+    console.log(x + " string ");
+    console.log("find " + y);
+    let ind = String(x).lastIndexOf(y); 
+    console.log(String(x).length)
+    console.log("y "+ ind)
     let sub = String(x).substring(ind, String(x).length);
-    let sub2 = "-" + sub;
+    console.log("sub "+ sub)
+    let sub1 = String(x).substring(0, ind);
+    console.log(sub1)
+    let sub2 = -Number(sub);
+    console.log(sub2);
     console.log(InvertChange);
-    return String(x).replace(sub, sub2);
+    
+    return (sub1 + sub2);
   }
 
   const numClickHandler = (e) => {
@@ -76,9 +85,12 @@ function App() {
         ...calc,
         num:
           calc.num === 0 && value === "0"
-          ? "0"
+          ? 0
           : localString(removeSpaces(calc.num + value)),
-        upRes: calc.upRes + value
+        upRes:
+          calc.num === 0 && value === "0"
+          ? calc.upRes
+          : calc.upRes + value
       });
     }
     else{
@@ -113,8 +125,14 @@ function App() {
     if(removeSpaces(calc.num).length < 16){
       setCalc({
         ...calc,
-        num: -(calc.num),
-        upRes: InvertChange(calc.upRes, calc.num)
+        num: 
+          calc.num && calc.upRes[calc.upRes.length - 1] !== "."
+          ? -(calc.num)
+          : calc.num,
+        upRes:
+          calc.num && calc.upRes[calc.upRes.length - 1] !== "."
+          ? InvertChange(calc.upRes, calc.num)
+          : calc.upRes
       });
     }
   };
@@ -158,11 +176,14 @@ function App() {
   const deleteClickHandler = () => {
     console.log("delete");
 
-    if(calc.upRes.length > 0){
+    if(calc.upRes.length > 0 && calc.upRes[calc.upRes.length-1] !== "+" && calc.upRes[calc.upRes.length-1] !== "-" && calc.upRes[calc.upRes.length-1] !== "X" && calc.upRes[calc.upRes.length-1] !== "/"){
       setCalc({
         ...calc,
         num: removeSpaces(calc.num).substring(0, removeSpaces(calc.num).length-1),
-        upRes: removeSpaces(calc.upRes).substring(0, removeSpaces(calc.upRes).length-1),
+        upRes:
+          calc.upRes !== "0"
+          ? removeSpaces(calc.upRes).substring(0, removeSpaces(calc.upRes).length-1)
+          : "",
         sign: ""
       });
     }
