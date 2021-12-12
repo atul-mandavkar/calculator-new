@@ -74,6 +74,89 @@ function App() {
     
     return (sub1 + sub2);
   }
+  const calculations = (x, y, sign) => {
+    if(!isNaN(x) && !isNaN(y) && sign.match(/[X]|[/]|[+]|[-]/)){
+      if(sign === "X"){
+        return x * y;
+      }
+      if(sign === "/"){
+        if(y !== 0){
+          return x / y;
+        }
+        else{
+          return "INFINITY";
+        }
+      }
+      if(sign === "+"){
+        return x + y;
+      }
+      if(sign === "-"){
+        return x - y;
+      }
+    }
+  }
+  const checkPosition = (x, y, z) => {
+    if(x === "X"){
+      return multPosition(y, z);
+    }
+    else if(x === "/"){
+      return divPosition(y, z);
+    }
+    else if(x === "+"){
+      return plusPosition(y, z);
+    }
+    else if(x === "-"){
+      return minusPosition(y, z);
+    }
+  }
+  const multPosition = (string, x) =>{
+    if(x === "left"){
+      return string.indexOf("X");
+    }
+    else if(x === "right"){
+      return string.lastIndexOf("X");
+    }
+    else{
+      console.log("Note: left or right")
+      return 0;
+    }
+  }
+  const divPosition = (string, x) =>{
+    if(x === "left"){
+      return string.indexOf("/");
+    }
+    else if(x === "right"){
+      return string.lastIndexOf("/");
+    }
+    else{
+      console.log("Note: left or right")
+      return 0;
+    }
+  }
+  const plusPosition = (string, x) =>{
+    if(x === "left"){
+      return string.indexOf("+");
+    }
+    else if(x === "right"){
+      return string.lastIndexOf("+");
+    }
+    else{
+      console.log("Note: left or right")
+      return 0;
+    }
+  }
+  const minusPosition = (string, x) =>{
+    if(x === "left"){
+      return string.indexOf("-");
+    }
+    else if(x === "right"){
+      return string.lastIndexOf("-");
+    }
+    else{
+      console.log("Note: left or right")
+      return 0;
+    }
+  }
 
   const numClickHandler = (e) => {
     console.log("number");
@@ -143,34 +226,88 @@ function App() {
     //console.log(calc.upRes)
     console.log();
     // For "--" conversion into "+" sign
-    const invertNum = (x) => {
+    const invertNegNum = (x) => {
+      let ans;
       if(x.match(/[-]{2}/)){
         console.log("minus minus")
-        let ans = x.replace("--", "+");
+        ans = x.replace("--", "+");
         if(!ans.match(/[-]{2}/)){
           console.log(ans);
           return ans;
         }
         else{
-          invertNum(ans);
+          invertNegNum(ans);
         }
       }
-      console.log(x);
+      //console.log(x);
       return x;
     }
-    let step1 = invertNum(calc.upRes);
-    console.log(step1)
-    // first find index of * or / then operate them then replace their position by answer till there is no *  or /  then check for + Or - sign
-/*
-    // For "*" or "/" sign
-    const multOrDiv = (x) => {
-      if(x.match(/[X]|[/]/g)){
-        console.log("mult or div");
-        let arr1 = x.match(/[X]|[/]/g);
-        console.log(arr1.length)
+    // For "+-" conversion into "-" sign
+    const invertPosNum = (x) => {
+      let ans;
+      if(x.match(/[+][-]/g)){
+        console.log("plus minus")
+        ans = x.replace("+-", "-");
+        if(!ans.match(/[+][-]/g)){
+          console.log(ans);
+          return ans;
+        }
+        else{
+          invertPosNum(ans);
+        }
+        //console.log(x);
+        return x;
       }
     }
-    multOrDiv(step1);*/
+    let step1 = invertNegNum(calc.upRes);
+    let step2 = invertPosNum(step1);
+    console.log("--")
+    //console.log(step1)
+    //console.log(step2)
+    console.log(calculations(2,3, "+"));
+    // first find index of * or / then operate them then replace their position by answer till there is no *  or /  then check for + Or - sign
+
+    console.log("Mult " + multPosition(step2, "left"))
+    console.log("Div " + divPosition(step2, "left"))
+    console.log("Plus "+ plusPosition(step2, "left"))
+    console.log("Minus " + minusPosition(step2, "left"))
+
+    // For "X" or "/" sign
+    const multOrDiv = (x) => {
+      if(x && x.match(/[X]|[/]/g)){
+        console.log("mult or div");
+        let arr1 = x.match(/[X]|[/]/g);
+        console.log(arr1)
+        for(let i = 0; i < arr1.length; i++){
+          let index1 = x.indexOf(arr1[i]);
+          let string1 = x.substring(0, index1);
+          console.log("////")
+          console.log(string1)
+          console.log(checkPosition(arr1[i], x, "left"));
+
+        }
+      }
+      else{
+        console.log("nonono")
+      }
+    }
+    
+
+    // For "+" or "-" sign
+    const plusOrMinus = (x) => {
+      if(x && x.match(/[+]|[-]/g)){
+        console.log("plus or minus");
+        let arr1 = x.match(/[+]|[-]/g);
+        console.log(arr1)
+        for(let i=0; i<arr1.length; i++){
+          let index1 = x.indexOf(arr1[i]);
+          let string1 = x.substring(0, index1);
+          console.log("]]]");
+          console.log(string1);
+        }
+      }
+    }
+    plusOrMinus(multOrDiv(step2));
 
   };
   const dotClickHandler = (e) => {
