@@ -22,7 +22,8 @@ function App() {
     res: 0,
     upRes: "",
     sign: "",
-    checkNum: true
+    checkNum: false,
+    checkSign: false
   });
   const localString = (x) => {
     if(x.length > 1 && x[0] === "0" && x[1] !== "."){
@@ -172,7 +173,9 @@ function App() {
         upRes:
           calc.num === 0 && value === "0"
           ? calc.upRes
-          : calc.upRes + value
+          : calc.upRes + value,
+        checkNum: false,
+        checkSign: false
       });
     }
     else{
@@ -192,13 +195,17 @@ function App() {
       num: 0,
       sign: value,
       upRes:
-        Number(calc.upRes[calc.upRes.length - 1])
+        calc.checkNum
+        ? String(calc.res) + value
+        : Number(calc.upRes[calc.upRes.length - 1])
         ? calc.upRes + value
         : calc.upRes[calc.upRes.length-1] === "0" && calc.upRes[calc.upRes.length-2] === "."
         ? correctDecimal(calc.upRes) + value
         : calc.upRes[calc.upRes.length-1] === "0"
         ? calc.upRes + value
-        : changeLastSign(calc.upRes, value)
+        : changeLastSign(calc.upRes, value),
+      checkNum: false,
+      checkSign: true
     });
   };
   const invertClickHandler = () => {
@@ -214,13 +221,14 @@ function App() {
         upRes:
           calc.num && calc.upRes[calc.upRes.length - 1] !== "."
           ? InvertChange(calc.upRes, calc.num)
-          : calc.upRes
+          : calc.upRes,
+        checkSign: false
       });
     }
   };
   const equalClickHandler = (e) => {
     console.log("equal");
-    const value = e.target.innerHTML;
+    //const value = e.target.innerHTML;
     //console.log(value);
     //console.log(calc.upRes)
     //console.log();
@@ -254,15 +262,15 @@ function App() {
         else{
           invertPosNum(ans);
         }
-        //console.log(x);
-        return x;
       }
+      //console.log(x);
+      return x;
     }
     let step1 = invertNegNum(calc.upRes);
     let step2 = invertPosNum(step1);
     console.log("--")
     //console.log(step1)
-    console.log("\n"+step2)
+    //console.log("\n"+step2)
     //console.log(calculations(2,3, "+"));
     // first find index of * or / then operate them then replace their position by answer till there is no *  or /  then check for + Or - sign
 /*
@@ -283,7 +291,15 @@ function App() {
         let index2;
         console.log("////")
         console.log("a = "+ string1)
-        if(string2.match(/[+]|[-]/g)){
+        if(string2.match(/[X]|[/]/g)){
+          let tempArr = string2.match(/[X]|[/]/g);
+          let tempInd = string2.indexOf(tempArr[0]);
+          let tempStr = string2.substring(0, tempInd);
+          string1 = String(calculations(Number(string1), Number(tempStr), arr1[0]));
+          string2 = string1 + string2.substring(tempInd, string2.length);
+          return multOrDiv(string2);
+        }
+        else if(string2.match(/[+]|[-]/g)){
           let arr2 = string2.match(/[+]|[-]/g);
           index2 = string2.indexOf(arr2[0]);
           x = string2.substring(index2, x.length);
@@ -300,9 +316,6 @@ function App() {
         //console.log(checkPosition(arr1[i], x, "left"));
         console.log("/// complete")
       }
-      else{
-        console.log("nonono")
-      }
     }
     
 
@@ -310,37 +323,66 @@ function App() {
     const plusOrMinus = (x) => {
       if(x && x.match(/[+]|[-]/g)){
         console.log("plus or minus");
+        console.log(x)
         let arr1 = x.match(/[+]|[-]/g);
-        let index1 = x.indexOf(arr1[0]);
-        let string1 = x.substring(0, index1);
-        let string2 = x.substring(index1+1, x.length);
-        console.log("]]]");
-        console.log("a1 = "+string1);
-        if(string2.match(/[X]|[/]/g)){
-          string2 = multOrDiv(string2);
-          console.log("b1 = "+string2)
+        let index1;
+        if(x[0] === "-"){
+          if(arr1.length === 1){
+            return multOrDiv(x);
+          }
+          arr1.shift();
+          index1 = x.substring(1, x.length).indexOf(arr1[0]);
+          index1 += 1;
         }
         else{
-          console.log("b1 = "+string2);
+          console.log(arr1);
+          index1 = x.indexOf(arr1[0]);
         }
-        console.log("]]] complete");
+        let string1 = x.substring(0, index1);
+        let string2 = x.substring(index1+1, x.length);
+        console.log(string1 +"\n" +string2)
+        console.log("]]]");
+        
+        if(string1.match(/[X]|[/]/g)){
+          string1 = multOrDiv(string1);
+          console.log("This pass to multordiv a1 = "+string1)
+        }
+        if(string2.match(/[X]|[/]/g)){
+          string2 = multOrDiv(string2);
+          console.log("This pass to multordiv b1 = "+string2)
+        }
+        else if(string2.match(/[+]|[-]/g)){
+          let tempArr = string2.match(/[+]|[-]/g);
+          let tempInd = string2.indexOf(tempArr[0]);
+          let tempStr = string2.substring(0, tempInd);
+          string1 = String(calculations(Number(string1), Number(tempStr), arr1[0]));
+          //console.log(tempStr +" -=- "+ string1)
+          string2 = String(string1) + string2.substring(tempInd, string2.length);
+          //console.log("equation is = "+string2);
+          return plusOrMinus(string2);
+        }
+        //console.log("a1 = "+string1);
+        //console.log("b1 = "+string2);
+        console.log("]]] complete");/*
         if(string2.match(/[+]|[-]/g)){
           string2 = plusOrMinus(string2);
-        }
+        }*/
         return calculations(Number(string1), Number(string2), arr1[0]);
       }
     }
-    console.log(plusOrMinus(step2));
-    let finalResult = (String(step2).match(/[+]|[-]/g)) ? (plusOrMinus(step2)) : (multOrDiv(step2));
+    //console.log(plusOrMinus(step2));
 
-    setCalc({
-      ...calc,
-      res: finalResult,
-      upRes: "",
-      sign: "",
-      num: 0
-    });
-
+    if(!calc.checkSign || calc.upRes[calc.upRes.length-1] !== "."){
+      setCalc({
+        ...calc,
+        res: (step2.match(/[+]|[-]/g)) ? (plusOrMinus(step2)) : (multOrDiv(step2)),
+        upRes: "",
+        sign: "",
+        num: 0,
+        checkNum: true,
+        checkSign: false
+      });
+    }
   };
   const dotClickHandler = (e) => {
     console.log("dot");
@@ -359,7 +401,8 @@ function App() {
           ? calc.upRes + value
           : calc.num === 0
           ? calc.upRes + "0" + value
-          : calc.upRes
+          : calc.upRes,
+        checkSign: true
       });
     }
   };
@@ -370,7 +413,9 @@ function App() {
       num: 0,
       res: 0,
       upRes: "",
-      sign: ""
+      sign: "",
+      checkNum: false,
+      checkSign: false
     });
   };
   const deleteClickHandler = () => {
