@@ -27,35 +27,27 @@ function App() {
   });
   const localString = (x) => {
     if(x.length > 1 && x[0] === "0" && x[1] !== "."){
-      console.log("local1")
+      //console.log("local1")
       return x.slice(1, x.length);
     }
-    console.log("local2")
+    //console.log("local2")
     return x;
   };
   const removeSpaces = (x) => {
-    console.log("removeSpace");
+    //console.log("removeSpace");
     return String(x).replace(/\s/g, "");
-  };
-  const correctSign = (x) => {
-    if(String(x).match(/[X]/g)){
-      console.log("correctSign1");
-      return String(x).replace("X", "*");
-    }
-    console.log("correctSign2")
-    return x;
   };
   const changeLastSign = (x, y) => {
     const z = String(x).substring(0, x.length-1);
-    console.log("changeLastSign")
+    //console.log("changeLastSign")
     return String(z + y);
   };
   const correctDecimal = (x) => {
     if(x[x.length-1] === "."){
-      console.log("correctDecimal1")
+      //console.log("correctDecimal1")
       return x + "0";
     }
-    console.log("correctDecimal2")
+    //console.log("correctDecimal2")
     return x;
   };
   const InvertChange = (x, y) => {
@@ -70,7 +62,7 @@ function App() {
     //console.log(sub1)
     let sub2 = -Number(sub);
     //console.log(sub2);
-    console.log(InvertChange);
+    //console.log(InvertChange);
     
     return (sub1 + sub2);
   }
@@ -95,71 +87,9 @@ function App() {
       }
     }
   }
-  const checkPosition = (x, y, z) => {
-    if(x === "X"){
-      return multPosition(y, z);
-    }
-    else if(x === "/"){
-      return divPosition(y, z);
-    }
-    else if(x === "+"){
-      return plusPosition(y, z);
-    }
-    else if(x === "-"){
-      return minusPosition(y, z);
-    }
-  }
-  const multPosition = (string, x) =>{
-    if(x === "left"){
-      return string.indexOf("X");
-    }
-    else if(x === "right"){
-      return string.lastIndexOf("X");
-    }
-    else{
-      console.log("Note: left or right")
-      return 0;
-    }
-  }
-  const divPosition = (string, x) =>{
-    if(x === "left"){
-      return string.indexOf("/");
-    }
-    else if(x === "right"){
-      return string.lastIndexOf("/");
-    }
-    else{
-      console.log("Note: left or right")
-      return 0;
-    }
-  }
-  const plusPosition = (string, x) =>{
-    if(x === "left"){
-      return string.indexOf("+");
-    }
-    else if(x === "right"){
-      return string.lastIndexOf("+");
-    }
-    else{
-      console.log("Note: left or right")
-      return 0;
-    }
-  }
-  const minusPosition = (string, x) =>{
-    if(x === "left"){
-      return string.indexOf("-");
-    }
-    else if(x === "right"){
-      return string.lastIndexOf("-");
-    }
-    else{
-      console.log("Note: left or right")
-      return 0;
-    }
-  }
 
   const numClickHandler = (e) => {
-    console.log("number");
+    //console.log("number");
     const value = e.target.innerHTML;
     //console.log(value);
 
@@ -183,7 +113,7 @@ function App() {
     }
   };
   const signClickHandler = (e) => {
-    console.log("sign");
+    //console.log("sign");
     const value = (e.target.innerHTML);
     //console.log(value);
     //console.log(correctSign(value));
@@ -209,7 +139,7 @@ function App() {
     });
   };
   const invertClickHandler = () => {
-    console.log("invert");
+    //console.log("invert");
 
     if(removeSpaces(calc.num).length < 16){
       setCalc({
@@ -227,7 +157,7 @@ function App() {
     }
   };
   const equalClickHandler = (e) => {
-    console.log("equal");
+    //console.log("equal");
     //const value = e.target.innerHTML;
     //console.log(value);
     //console.log(calc.upRes)
@@ -236,10 +166,10 @@ function App() {
     const invertNegNum = (x) => {
       let ans;
       if(x.match(/[-]{2}/)){
-        console.log("minus minus")
+        //console.log("minus minus")
         ans = x.replace("--", "+");
         if(!ans.match(/[-]{2}/)){
-          console.log(ans);
+          //console.log(ans);
           return ans;
         }
         else{
@@ -253,10 +183,10 @@ function App() {
     const invertPosNum = (x) => {
       let ans;
       if(x.match(/[+][-]/g)){
-        console.log("plus minus")
+        //console.log("plus minus")
         ans = x.replace("+-", "-");
         if(!ans.match(/[+][-]/g)){
-          console.log(ans);
+          //console.log(ans);
           return ans;
         }
         else{
@@ -268,29 +198,25 @@ function App() {
     }
     let step1 = invertNegNum(calc.upRes);
     let step2 = invertPosNum(step1);
-    console.log("--")
+    //console.log("--")
     //console.log(step1)
     //console.log("\n"+step2)
     //console.log(calculations(2,3, "+"));
     // first find index of * or / then operate them then replace their position by answer till there is no *  or /  then check for + Or - sign
-/*
-    console.log("Mult " + multPosition(step2, "left"))
-    console.log("Div " + divPosition(step2, "left"))
-    console.log("Plus "+ plusPosition(step2, "left"))
-    console.log("Minus " + minusPosition(step2, "left"))
-*/
+
     // For "X" or "/" sign
     const multOrDiv = (x) => {
       if(x && x.match(/[X]|[/]/g)){
-        console.log("mult or div");
+        //console.log("mult or div");
         let arr1 = x.match(/[X]|[/]/g);
-        console.log(x)
+        //console.log(x)
         let index1 = x.indexOf(arr1[0]);
         let string1 = x.substring(0, index1);
         let string2 = x.substring(index1+1, x.length);
         let index2;
-        console.log("////")
-        console.log("a = "+ string1)
+        let ansF;
+        //console.log("////")
+        //console.log("a = "+ string1)
         if(string2.match(/[X]|[/]/g)){
           let tempArr = string2.match(/[X]|[/]/g);
           let tempInd = string2.indexOf(tempArr[0]);
@@ -304,17 +230,15 @@ function App() {
           index2 = string2.indexOf(arr2[0]);
           x = string2.substring(index2, x.length);
           string2 = string2.substring(0, index2);
-          console.log("b = " + string2);
-          let ansF = calculations(Number(string1), Number(string2), arr1[0]);
+          //console.log("b = " + string2);
+          ansF = calculations(Number(string1), Number(string2), arr1[0]);
           return String(ansF) + x;
         }
         else{
-          console.log("b= " + string2);
-          let ansF = calculations(Number(string1), Number(string2), arr1[0]);
+          //console.log("b= " + string2);
+          ansF = calculations(Number(string1), Number(string2), arr1[0]);
           return String(ansF);
-        }
-        //console.log(checkPosition(arr1[i], x, "left"));
-        console.log("/// complete")
+        };
       }
     }
     
@@ -322,8 +246,8 @@ function App() {
     // For "+" or "-" sign
     const plusOrMinus = (x) => {
       if(x && x.match(/[+]|[-]/g)){
-        console.log("plus or minus");
-        console.log(x)
+        //console.log("plus or minus");
+        //console.log(x)
         let arr1 = x.match(/[+]|[-]/g);
         let index1;
         if(x[0] === "-"){
@@ -335,21 +259,21 @@ function App() {
           index1 += 1;
         }
         else{
-          console.log(arr1);
+          //console.log(arr1);
           index1 = x.indexOf(arr1[0]);
         }
         let string1 = x.substring(0, index1);
         let string2 = x.substring(index1+1, x.length);
-        console.log(string1 +"\n" +string2)
-        console.log("]]]");
+        //console.log(string1 +"\n" +string2)
+        //console.log("]]]");
         
         if(string1.match(/[X]|[/]/g)){
           string1 = multOrDiv(string1);
-          console.log("This pass to multordiv a1 = "+string1)
+          //console.log("This pass to multordiv a1 = "+string1)
         }
         if(string2.match(/[X]|[/]/g)){
           string2 = multOrDiv(string2);
-          console.log("This pass to multordiv b1 = "+string2)
+          //console.log("This pass to multordiv b1 = "+string2)
         }
         else if(string2.match(/[+]|[-]/g)){
           let tempArr = string2.match(/[+]|[-]/g);
@@ -363,10 +287,7 @@ function App() {
         }
         //console.log("a1 = "+string1);
         //console.log("b1 = "+string2);
-        console.log("]]] complete");/*
-        if(string2.match(/[+]|[-]/g)){
-          string2 = plusOrMinus(string2);
-        }*/
+        //console.log("]]] complete");
         return calculations(Number(string1), Number(string2), arr1[0]);
       }
     }
@@ -385,7 +306,7 @@ function App() {
     }
   };
   const dotClickHandler = (e) => {
-    console.log("dot");
+    //console.log("dot");
     const value = e.target.innerHTML;
     //console.log(value);
 
@@ -407,7 +328,7 @@ function App() {
     }
   };
   const resetClickHandler = () => {
-    console.log("reset");
+    //console.log("reset");
     setCalc({
       ...calc,
       num: 0,
@@ -419,7 +340,7 @@ function App() {
     });
   };
   const deleteClickHandler = () => {
-    console.log("delete");
+    //console.log("delete");
 
     if(calc.upRes.length > 0 && calc.upRes[calc.upRes.length-1] !== "+" && calc.upRes[calc.upRes.length-1] !== "-" && calc.upRes[calc.upRes.length-1] !== "X" && calc.upRes[calc.upRes.length-1] !== "/"){
       setCalc({
